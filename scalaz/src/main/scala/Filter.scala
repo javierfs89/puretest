@@ -25,7 +25,7 @@ object Filter{
 
   import scalaz.MonadError, scalaz.syntax.monadError._
 
-  type Location = (_root_.sourcecode.File,_root_.sourcecode.Line)
+  type Location = (sourcecode.File, sourcecode.Line)
 
   case class LocationException(obtained: String, location: Location) extends Throwable {
     override def toString =

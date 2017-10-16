@@ -7,7 +7,7 @@ import puretest.{Filter => TestFilter}
 
 trait SpecScalatest[P[_]] extends Spec[P]{ self : FunSpec with Matchers =>
 
-  implicit val Te: StateTester[P,Int,Throwable]
+  implicit val Te: StateTester[P, Int, Throwable]
 
   // Tests
 

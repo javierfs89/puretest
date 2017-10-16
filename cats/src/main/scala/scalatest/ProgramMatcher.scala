@@ -2,6 +2,8 @@ package org.hablapps.puretest
 
 import org.scalatest._, matchers._, Matchers._
 
+// TODO(jfuentes): make this a trait that can be extended like `class MyTest extends FunSpec with Matchers with PureMatchers {...}`
+
 /**
  * Program matcher
  */

@@ -3,14 +3,11 @@ package test
 
 import cats.{MonadState, MonadError}
 import cats.implicits._
-import Filter.Syntax._
+import Filter.syntax._
 
-trait Spec[P[_]]{
+trait Spec[P[_]] extends SimpleSpec[P, Throwable] {
 
   val MS: MonadState[P, Int]
-  implicit val ME: MonadError[P, Throwable]
-
-  implicit val Fi: Filter[P]
 
   /* Working programs */
 
@@ -49,6 +46,6 @@ trait Spec[P[_]]{
 
   def failingProgramWithHandledError: P[Unit] =
     for {
-      Left(Error1(1)) <- ME.raiseError[Unit](Error1(1)).error
+      Left(Error1(1)) <- ME.raiseError[Unit](Error1(1)).inspect
     } yield ()
 }

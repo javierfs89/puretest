@@ -7,7 +7,7 @@ import cats.data.{ReaderT, StateT}
  * Stateful testers
  */
 trait StateTester[P[_], S, E] {
-  def apply(state: S): Tester[P,E]
+  def apply(state: S): Tester[P, E]
 }
 
 object StateTester {
@@ -23,9 +23,9 @@ object StateTester {
 
   implicit def ReaderTStateTester[E, F[_]: Tester[?[_], E], S] =
     new StateTester[ReaderT[F, S, ?], S, E] {
-      def apply(state: S) = new Tester[ReaderT[F, S, ?],E]{
-        def apply[T](s: ReaderT[F,S,T]): Either[E, T] =
-          Tester[F,E].apply(s.run(state))
+      def apply(state: S) = new Tester[ReaderT[F, S, ?], E]{
+        def apply[T](s: ReaderT[F, S, T]): Either[E, T] =
+          Tester[F, E].apply(s.run(state))
       }
     }
 
