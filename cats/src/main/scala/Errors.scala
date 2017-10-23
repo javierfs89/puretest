@@ -1,5 +1,8 @@
 package org.hablapps.puretest
 
+import cats.MonadError
+import cats.syntax.all._
+
 /**
  * Puretest errors
  */
@@ -25,6 +28,21 @@ object PureTestError {
       case _ => None
     }
 
+  implicit def toMonadError[P[_], E](implicit
+      ME: MonadError[P, PureTestError[E]]) =
+    new MonadError[P, E] {
+      def pure[A](a: A) = ME.pure(a)
+      def flatMap[A,B](p: P[A])(f: A => P[B]) = ME.flatMap(p)(f)
+      def tailRecM[A, B](a: A)(f: A => P[Either[A, B]]): P[B] = ME.tailRecM(a)(f)
+      def raiseError[A](e: E) = ME.raiseError(toPureTestError(e))
+      def handleErrorWith[A](p: P[A])(f: E => P[A]) =
+        p handleErrorWith { e2 =>
+          fromPureTestError(e2) match {
+            case Some(e1) => f(e1)
+            case None => ME.raiseError(e2)
+          }
+        }
+    }
 
 }
 

@@ -10,10 +10,10 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
   /* Evidence */
 
   val ticTacToe: TicTacToe[P]
-  implicit val ME: cats.MonadError[P, PuretestError[Error]]
+  implicit val RE: RaiseError[P, PureTestError[Error]]
 
   /* Predicates */
-  import ticTacToe.{ME => _, _}
+  import ticTacToe._
 
   Describe("Reset Spec") {
     Holds("First turn is X") {
@@ -26,17 +26,17 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
     It("should not be possible to place more than one stone at the same place") {
       reset >>
       place(X, (1, 1)) >>
-      place(O, (1, 1)).isError[Error](OccupiedPosition((1, 1)))
+      place(O, (1, 1)) shouldFailWith[Error] OccupiedPosition((1, 1))
     }
 
     It("Placing outside of the board is error") {
       reset >>
-      place(X, (5, 5)).isError[Error](NotInTheBoard((5, 5)))
+      place(X, (5, 5)) shouldFailWith[Error] NotInTheBoard((5, 5))
     }
 
     It("Placing in the wrong turn") {
       reset >>
-      place(O, (1, 1)).isError[Error](WrongTurn(O))
+      place(O, (1, 1)) shouldFailWith[Error] WrongTurn(O)
     }
 
     Holds("Turn must change") {
@@ -50,7 +50,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
     It("Position must be occupied") {
       reset >>
       place(X, (1, 1)) >>
-      in((1, 1)) isEqual Option(X)
+      in((1, 1)) shouldBe Option(X)
     }
   }
 
@@ -83,7 +83,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
   Describe("Simulation behaviour") {
     It("Unfinished match") {
       reset >>
-      simulate((0, 0), (0, 1))((1, 0), (1, 1)).isError[Error](NotEnoughMoves())
+      simulate((0, 0), (0, 1))((1, 0), (1, 1)) shouldFailWith[Error] NotEnoughMoves()
     }
 
     Holds("Finished match") {

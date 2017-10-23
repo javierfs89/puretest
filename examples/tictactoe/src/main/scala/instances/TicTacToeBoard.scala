@@ -1,10 +1,12 @@
-package org.hablapps.puretest.examples.tictactoe
+package org.hablapps.puretest
+package examples.tictactoe
 
 import TicTacToe._
 
-import cats.data.StateT
 import cats.MonadError
-import cats.implicits._
+import cats.data.StateT
+import cats.instances.either._
+import cats.syntax.all._
 
 case class BoardState(
   board: Vector[Vector[Option[Stone]]],
@@ -14,7 +16,7 @@ object BoardState {
 
   /* Auxiliary types */
 
-  type Program[T] = StateT[Either[Error, ?], BoardState, T]
+  type Program[T] = StateT[Either[PureTestError[Error], ?], BoardState, T]
 
   /* Auxiliary values */
 
@@ -28,7 +30,7 @@ object BoardState {
 
     /* Evidences */
 
-    val ME = MonadError[Program, Error]
+    val ME: MonadError[Program, Error] = PureTestError.toMonadError
 
     import StateT._
 
