@@ -3,18 +3,58 @@ package test
 
 import cats.{MonadState, MonadError}
 import cats.syntax.all._
+import Filter.syntax._
 
-trait Spec[P[_]] extends FilterSpec[P] {
+trait Spec[P[_]] extends FunSpec[P] {
 
   val MS: MonadState[P, Int]
   implicit val ME: MonadError[P, Throwable]
+  implicit val RE: RaiseError[P, PureTestError[Throwable]]
 
   /* Working programs */
 
-  def trueProgram: P[Boolean] = for {
+  Describe("beSatisfied for Boolean program"){
+
+    It("should work for working programs returning true") {
+      trueProgram
+    }
+
+    It("should work for failing programs at pattern matching") {
+      falseProgram shouldBe false
+    }
+
+    It("should work for failing programs with explicit raised errors") {
+      raisedErrorBoolProgram.shouldFail
+    }
+  }
+
+  Describe("runWithoutErrors"){
+
+    It("should work for working programs"){
+      trueProgram.shouldSucceed
+      falseProgram shouldBe false
+      workingProgram shouldMatch { case () => true }
+    }
+
+    // It("should work for failing programs at pattern matching") {
+    //   failingMatchBoolProgram.shouldFail
+    //   failingMatchProgram.shouldFail
+    // }
+
+    It("should work for failing programs with explicit raised errors"){
+      raisedErrorBoolProgram.shouldFail
+      raisedErrorProgram.shouldFail
+    }
+
+    It("should work for failing programs with handled errors"){
+      failingProgramWithHandledError.shouldSucceed
+    }
+  }
+
+  def trueProgram: P[Unit] = for {
     _ <- MS.set(1)
     1 <- MS.get
-  } yield true
+  } yield ()
 
   def falseProgram: P[Boolean] =
     false.pure[P]
@@ -22,17 +62,17 @@ trait Spec[P[_]] extends FilterSpec[P] {
   def workingProgram: P[Unit] =
     ().pure[P]
 
-  /* Boolean program that fails in pattern matching */
+  // /* Boolean program that fails in pattern matching */
 
-  def failingMatchBoolProgram: P[Boolean] = for {
-    _ <- MS.set(1)
-    2 <- MS.get
-  } yield true
+  // def failingMatchBoolProgram: P[Boolean] = for {
+  //   _ <- MS.set(1)
+  //   2 <- MS.get
+  // } yield true
 
-  def failingMatchProgram: P[Unit] = for {
-    _ <- MS.set(1)
-    2 <- MS.get
-  } yield ()
+  // def failingMatchProgram: P[Unit] = for {
+  //   _ <- MS.set(1)
+  //   2 <- MS.get
+  // } yield ()
 
   /* Failing and working programs with explicit raised errors */
 
@@ -46,6 +86,6 @@ trait Spec[P[_]] extends FilterSpec[P] {
 
   def failingProgramWithHandledError: P[Unit] =
     for {
-      Left(Error1(1)) <- ME.raiseError[Unit](Error1(1)).inspect
+      Left(Error1(1)) <- ME.raiseError[Unit](Error1(1)).attempt
     } yield ()
 }

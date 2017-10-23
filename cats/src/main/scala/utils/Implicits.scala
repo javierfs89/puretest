@@ -4,7 +4,7 @@ import cats.MonadError
 
 object Implicits {
 
-  implicit def unliftPuretestErrorMonadError[P[_], E](implicit ME: MonadError[P, PuretestError[E]]) =
+  implicit def unliftPureTestErrorMonadError[P[_], E](implicit ME: MonadError[P, PureTestError[E]]) =
     new MonadError[P, E] {
       def pure[A](x: A): P[A] = ME.pure(x)
       def flatMap[A, B](fa: P[A])(f: A => P[B]): P[B] = ME.flatMap(fa)(f)

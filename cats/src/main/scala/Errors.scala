@@ -3,49 +3,58 @@ package org.hablapps.puretest
 /**
  * Puretest errors
  */
-trait Errors {
 
-  sealed trait PuretestError[E]
-  case class ApplicationError[E](e: E) extends PuretestError[E]
-  case class TestingErrorW[E](e: TestingError) extends PuretestError[E] {
-    override def toString() = e.getMessage
+sealed abstract class PureTestError[E](msg: String) extends RuntimeException(msg){
+  override def toString = msg
+}
+
+object PureTestError {
+
+  def simplifyLocation(location: Location): String = {
+    val fileext = raw".*/(.*)".r
+    val fileext(filename) = location._1.value
+    s"($filename:${location._2.value})"
   }
 
-  object PuretestError {
-    import cats.~>
+  implicit def toPureTestError[E](e: E): PureTestError[E] =
+    ApplicationError(e)
 
-    implicit def eitherToPuretestError[E] =
-      λ[Either[E, ?] ~> Either[PuretestError[E], ?]] {
-        case Left(e) => Left(ApplicationError(e))
-        case Right(a) => Right(a)
-      }
+  implicit def fromPureTestError[E](e: PureTestError[E]): Option[E] =
+    e match {
+      case ApplicationError(e) => Some(e)
+      case _ => None
+    }
 
-  }
-
-  sealed trait TestingError extends RuntimeException
-
-  case class NotEqualTo[A](a1: A, a2: A)(location: Location)
-    extends RuntimeException(s"$a2 was not equal to $a1 ${simplifyLocation(location)}")
-    with TestingError
-
-  case class NotFailed[A](value: A)(location: Location)
-    extends RuntimeException(s"Error expected but found $value ${simplifyLocation(location)}")
-    with TestingError
-
-  case class NotSucceeded[E](error: E)(location: Location)
-    extends RuntimeException(s"Found error $error ${simplifyLocation(location)}")
-    with TestingError
-
-  case class NotError[A, E](value: A, e: E)(location: Location)
-    extends RuntimeException(s"$value was not equal to error $e ${simplifyLocation(location)}")
-    with TestingError
-
-  case class OtherError[E](found: E, expected: E)(location: Location)
-    extends RuntimeException(s"Error $found was not equal to error $expected ${simplifyLocation(location)}")
-    with TestingError
-
-  case class FilterError(found: String)(location: Location)
-    extends RuntimeException(s"$found doesn't match expected pattern ${simplifyLocation(location)}")
-    with TestingError
 
 }
+
+import PureTestError.simplifyLocation
+
+case class ApplicationError[E](e: E) extends PureTestError[E](s"Application error: $e")
+
+case class NotEqualTo[E,A](found: A, expected: A)(implicit location: Location)
+  extends PureTestError[E](s"Value $expected expected but found value $found ${simplifyLocation(location)}")
+
+case class NotFailed[E,A](found: A)(implicit location: Location)
+  extends PureTestError[E](s"Error expected but found value $found ${simplifyLocation(location)}")
+
+case class NotSucceeded[E](found: E)(implicit location: Location)
+  extends PureTestError[E](s"Value expected but found error $found ${simplifyLocation(location)}")
+
+case class NotError[A, E](found: A, expected: E)(implicit location: Location)
+  extends PureTestError[E](s"Error $expected expected but found value $found ${simplifyLocation(location)}")
+
+case class NotValue[A, E](found: E, expected: A)(implicit location: Location)
+  extends PureTestError[E](s"Value $expected expected but found error $found ${simplifyLocation(location)}")
+
+case class OtherError[E](found: E, expected: E)(implicit location: Location)
+  extends PureTestError[E](s"Error $expected expected but found error $found ${simplifyLocation(location)}")
+
+case class NotMatched[A,E](found: A)(implicit location: Location)
+  extends PureTestError[E](s"Expected pattern doesn't match found value $found ${simplifyLocation(location)}")
+
+case class NotMatchedFailure[E](found: E)(implicit location: Location)
+  extends PureTestError[E](s"Expected pattern doesn't match found error $found ${simplifyLocation(location)}")
+
+case class ShouldNotHappen[E](implicit location: Location)
+  extends PureTestError[E](s"This error shouldn't ever be thrown ${simplifyLocation(location)}")
