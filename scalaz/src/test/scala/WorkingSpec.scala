@@ -2,14 +2,12 @@ package org.hablapps.puretest
 package test
 
 import scalaz.syntax.monadError._
-import Filter.syntax._
 
 import WorkingProgram.Error
 
-trait WorkingSpec[P[_]] extends FunSpec[P] {
+trait WorkingSpec[P[_]] extends FunSpec[P,Error] {
   val S: WorkingProgram[P]
   import S._
-  implicit val RE: RaiseError[P, PureTestError[Error]]
 
   Describe("ShouldSucceed"){
 
@@ -63,6 +61,7 @@ trait WorkingSpec[P[_]] extends FunSpec[P] {
 object WorkingSpec{
   class Scalatest[P[_]](
     val S: WorkingProgram[P],
+    val HE: HandleError[P,Error],
     val RE: RaiseError[P,PureTestError[Error]],
     val Tester: Tester[P,PureTestError[Error]])
   extends scalatestImpl.ScalatestFunSpec[P,Error]
