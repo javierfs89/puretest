@@ -1,20 +1,17 @@
-package org.hablapps
-package puretest
+package org.hablapps.puretest
 package test
 
-import cats.MonadState
+import cats.{MonadError, MonadState}
 import cats.data.StateT
-import cats.implicits._
+import cats.instances.either._
 
 import SpecScalatestStateT.Program
 
 class SpecScalatestStateT extends scalatestImpl.ScalatestFunSpec[Program, Throwable] with Spec[Program] {
 
   val MS = MonadState[Program, Int]
-  implicit val ME = PureTestError.toMonadError
+  val MPE = MonadError[Program, PureTestError[Throwable]]
   val Te = StateTester[Program, Int, PureTestError[Throwable]]
-  val HE = HandleError[Program, Throwable]
-  val RE = RaiseError[Program, PureTestError[Throwable]]
 
   lazy val Tester = Te(0)
 }

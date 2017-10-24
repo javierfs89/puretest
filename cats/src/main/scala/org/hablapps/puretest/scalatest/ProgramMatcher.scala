@@ -26,6 +26,7 @@ object ProgramMatchers {
       PM.beEqualTo(value)
   }
 
+  object syntax extends Syntax // scalastyle:ignore
   trait Syntax {
     def failWith[P[_]] = new FailWithAux[P] {}
     def beEqualTo[P[_]] = new BeEqualToAux[P] {}
@@ -34,8 +35,6 @@ object ProgramMatchers {
     def runWithoutErrors[P[_]](implicit PM: ProgramMatchers[P, _]) =
       PM.runWithoutErrors
   }
-
-  object syntax extends Syntax
 
   implicit def matcher[P[_], E](implicit test: Tester[P, E]) =
     new ProgramMatchers[P, E]{

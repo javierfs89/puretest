@@ -8,13 +8,12 @@ trait Filter[F[_]] {
     L: sourcecode.Line): F[A]
 }
 
-object Filter{
+object Filter {
 
   def apply[F[_]](implicit S: Filter[F]) = S
 
-  object syntax extends Syntax
+  object syntax extends Syntax // scalastyle:ignore
   trait Syntax {
-
     implicit class FilterOps[F[_],A](fa: F[A])(implicit SF: Filter[F]){
       def filter(f: A => Boolean)(implicit F: sourcecode.File, L: sourcecode.Line): F[A] =
         SF.filter(fa)(f)
@@ -23,7 +22,7 @@ object Filter{
     }
   }
 
-  implicit def FilterForMonadError[F[_], E](implicit
+  implicit def filterForMonadError[F[_], E](implicit
       M: Monad[F], HE: HandleError[F,E], RE: RaiseError[F, PureTestError[E]]) =
     new Filter[F] {
       def filter[A](fa: F[A])(f: A => Boolean)(implicit

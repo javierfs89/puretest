@@ -3,7 +3,6 @@ package examples.tictactoe
 package test
 
 import cats.syntax.all._
-import PureTestError._
 
 trait TicTacToeFilterSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   import TicTacToe._
@@ -13,7 +12,7 @@ trait TicTacToeFilterSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   val ticTacToe: TicTacToe[P]
 
   /* Predicates */
-  import ticTacToe._
+  import ticTacToe.{ME => _, _}
 
   Describe("Reset Spec") {
     Holds("First turn is X") {

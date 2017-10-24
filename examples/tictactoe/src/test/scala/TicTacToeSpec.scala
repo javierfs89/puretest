@@ -12,7 +12,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   val ticTacToe: TicTacToe[P]
 
   /* Predicates */
-  import ticTacToe._
+  import ticTacToe.{ME => _, _}
 
   Describe("Reset Spec") {
     Holds("First turn is X") {

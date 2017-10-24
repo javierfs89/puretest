@@ -1,7 +1,6 @@
 package org.hablapps.puretest
 
 import cats.MonadError
-import cats.syntax.all._
 
 /**
  * Puretest errors
@@ -11,39 +10,26 @@ sealed abstract class PureTestError[E](msg: String) extends RuntimeException(msg
   override def toString = msg
 }
 
-object PureTestError {
-
+object PureTestError extends PureTestErrorImplicits {
   def simplifyLocation(location: Location): String = {
     val fileext = raw".*/(.*)".r
     val fileext(filename) = location._1.value
     s"($filename:${location._2.value})"
   }
+}
 
-  def toPureTestError[E](e: E): PureTestError[E] =
-    ApplicationError(e)
-
-  def fromPureTestError[E](e: PureTestError[E]): Option[E] =
-    e match {
-      case ApplicationError(e) => Some(e)
-      case _ => None
-    }
-
+trait PureTestErrorImplicits {
   implicit def toMonadError[P[_], E](implicit
       ME: MonadError[P, PureTestError[E]]) =
     new MonadError[P, E] {
       def pure[A](a: A) = ME.pure(a)
       def flatMap[A,B](p: P[A])(f: A => P[B]) = ME.flatMap(p)(f)
       def tailRecM[A, B](a: A)(f: A => P[Either[A, B]]): P[B] = ME.tailRecM(a)(f)
-      def raiseError[A](e: E) = ME.raiseError(toPureTestError(e))
-      def handleErrorWith[A](p: P[A])(f: E => P[A]) =
-        p handleErrorWith { e2 =>
-          fromPureTestError(e2) match {
-            case Some(e1) => f(e1)
-            case None => ME.raiseError(e2)
-          }
-        }
+      def raiseError[A](e: E) = ME.raiseError(ApplicationError(e))
+      def handleErrorWith[A](fa: P[A])(f: E => P[A]): P[A] = ME.recoverWith(fa) {
+        case ApplicationError(e) => f(e)
+      }
     }
-
 }
 
 import PureTestError.simplifyLocation

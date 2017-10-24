@@ -1,13 +1,12 @@
 package org.hablapps.puretest
 package test
 
-import cats.{MonadState, MonadError}
+import cats.MonadState
 import cats.syntax.all._
 
 trait Spec[P[_]] extends FunSpec[P, Throwable] {
 
   val MS: MonadState[P, Int]
-  implicit val ME: MonadError[P, Throwable]
 
   /* Working programs */
 
