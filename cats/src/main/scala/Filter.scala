@@ -12,7 +12,8 @@ object Filter{
 
   def apply[F[_]](implicit S: Filter[F]) = S
 
-  object syntax {
+  object syntax extends Syntax
+  trait Syntax {
 
     implicit class FilterOps[F[_],A](fa: F[A])(implicit SF: Filter[F]){
       def filter(f: A => Boolean)(implicit F: sourcecode.File, L: sourcecode.Line): F[A] =

@@ -11,8 +11,9 @@ import BoardState.Program
 class BoardStateSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
     with TicTacToeSpec[Program] {
 
-  lazy val ticTacToe: TicTacToe[Program] = BoardState.BoardTicTacToe
-  lazy val Tester = StateTester[Program, BoardState, PureTestError[TicTacToe.Error]].apply(BoardState.empty)
+  val ticTacToe: TicTacToe[Program] = BoardState.BoardTicTacToe
+  val Tester = StateTester[Program, BoardState, PureTestError[TicTacToe.Error]].apply(BoardState.empty)
+  val HE = HandleError.fromMonadError[Program, TicTacToe.Error](ticTacToe.ME)
   val RE = RaiseError[Program, PureTestError[TicTacToe.Error]]
 
 }

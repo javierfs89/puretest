@@ -3,13 +3,11 @@ package test
 
 import cats.{MonadState, MonadError}
 import cats.syntax.all._
-import Filter.syntax._
 
-trait Spec[P[_]] extends FunSpec[P] {
+trait Spec[P[_]] extends FunSpec[P, Throwable] {
 
   val MS: MonadState[P, Int]
   implicit val ME: MonadError[P, Throwable]
-  implicit val RE: RaiseError[P, PureTestError[Throwable]]
 
   /* Working programs */
 
@@ -36,10 +34,10 @@ trait Spec[P[_]] extends FunSpec[P] {
       workingProgram shouldMatch { case () => true }
     }
 
-    // It("should work for failing programs at pattern matching") {
-    //   failingMatchBoolProgram.shouldFail
-    //   failingMatchProgram.shouldFail
-    // }
+    It("should fail for failing programs at pattern matching") {
+      failingMatchBoolProgram.shouldFail
+      failingMatchProgram.shouldFail
+    }
 
     It("should work for failing programs with explicit raised errors"){
       raisedErrorBoolProgram.shouldFail
@@ -62,17 +60,17 @@ trait Spec[P[_]] extends FunSpec[P] {
   def workingProgram: P[Unit] =
     ().pure[P]
 
-  // /* Boolean program that fails in pattern matching */
+  /* Boolean program that fails in pattern matching */
 
-  // def failingMatchBoolProgram: P[Boolean] = for {
-  //   _ <- MS.set(1)
-  //   2 <- MS.get
-  // } yield true
+  def failingMatchBoolProgram: P[Boolean] = for {
+    _ <- MS.set(1)
+    2 <- MS.get
+  } yield true
 
-  // def failingMatchProgram: P[Unit] = for {
-  //   _ <- MS.set(1)
-  //   2 <- MS.get
-  // } yield ()
+  def failingMatchProgram: P[Unit] = for {
+    _ <- MS.set(1)
+    2 <- MS.get
+  } yield ()
 
   /* Failing and working programs with explicit raised errors */
 

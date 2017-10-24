@@ -11,6 +11,7 @@ class BoardStateFilterSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
 
   val ticTacToe = BoardState.BoardTicTacToe
   val Tester = StateTester[Program, BoardState, PureTestError[TicTacToe.Error]].apply(BoardState.empty)
+  val HE = HandleError.fromMonadError[Program, TicTacToe.Error](ticTacToe.ME)
   val RE = RaiseError[Program, PureTestError[TicTacToe.Error]]
 
 }

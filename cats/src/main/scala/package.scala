@@ -2,7 +2,8 @@ package org.hablapps
 
 package object puretest
   extends StateValidatedMonad
-  with MonadErrorUtils {
+  with MonadErrorUtils
+  with Filter.Syntax {
 
   type Location = (sourcecode.File, sourcecode.Line)
 

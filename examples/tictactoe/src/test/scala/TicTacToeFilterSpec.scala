@@ -4,15 +4,13 @@ package test
 
 import cats.syntax.all._
 import PureTestError._
-import Filter.syntax._
 
-trait TicTacToeFilterSpec[P[_]] extends FunSpec[P] {
+trait TicTacToeFilterSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   import TicTacToe._
 
   /* Evidence */
 
   val ticTacToe: TicTacToe[P]
-  implicit val RE: RaiseError[P, PureTestError[Error]]
 
   /* Predicates */
   import ticTacToe._

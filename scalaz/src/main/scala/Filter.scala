@@ -12,6 +12,7 @@ object Filter{
 
   def apply[F[_]](implicit S: Filter[F]) = S
 
+  object syntax extends Syntax
   trait Syntax {
 
     implicit class FilterOps[F[_],A](fa: F[A])(implicit SF: Filter[F]){
@@ -21,8 +22,6 @@ object Filter{
         filter(f)
     }
   }
-
-  object Syntax extends Syntax
 
   implicit def FilterForMonadError[F[_], E](implicit
       M: Monad[F], HE: HandleError[F,E], RE: RaiseError[F, PureTestError[E]]) =

@@ -19,10 +19,10 @@ object PureTestError {
     s"($filename:${location._2.value})"
   }
 
-  implicit def toPureTestError[E](e: E): PureTestError[E] =
+  def toPureTestError[E](e: E): PureTestError[E] =
     ApplicationError(e)
 
-  implicit def fromPureTestError[E](e: PureTestError[E]): Option[E] =
+  def fromPureTestError[E](e: PureTestError[E]): Option[E] =
     e match {
       case ApplicationError(e) => Some(e)
       case _ => None

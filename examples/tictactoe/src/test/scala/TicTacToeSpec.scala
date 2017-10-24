@@ -4,13 +4,12 @@ package test
 
 import cats.syntax.all._
 
-trait TicTacToeSpec[P[_]] extends FunSpec[P] {
+trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   import TicTacToe._
 
   /* Evidence */
 
   val ticTacToe: TicTacToe[P]
-  implicit val RE: RaiseError[P, PureTestError[Error]]
 
   /* Predicates */
   import ticTacToe._
