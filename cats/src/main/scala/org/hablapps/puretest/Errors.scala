@@ -6,7 +6,7 @@ import cats.MonadError
  * Puretest errors
  */
 
-sealed abstract class PureTestError[E](msg: String) extends RuntimeException(msg){
+sealed abstract class PureTestError[E](msg: String) {
   override def toString = msg
 }
 

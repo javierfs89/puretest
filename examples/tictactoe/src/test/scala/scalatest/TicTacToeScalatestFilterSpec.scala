@@ -4,6 +4,7 @@ package test
 
 import scalatestImpl.ScalatestFunSpec
 import cats.instances.either._
+
 import BoardState.Program
 
 class BoardStateFilterSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
@@ -11,6 +12,6 @@ class BoardStateFilterSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
 
   val ticTacToe = BoardState.BoardTicTacToe
   val Tester = StateTester[Program, BoardState, PureTestError[TicTacToe.Error]].apply(BoardState.empty)
-  override val MPE = implicitly
+  val RE = RaiseError[Program, PureTestError[TicTacToe.Error]]
 
 }

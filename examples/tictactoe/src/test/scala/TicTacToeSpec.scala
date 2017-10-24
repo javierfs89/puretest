@@ -10,9 +10,10 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   /* Evidence */
 
   val ticTacToe: TicTacToe[P]
+  implicit val RE: RaiseError[P, PureTestError[TicTacToe.Error]]
 
   /* Predicates */
-  import ticTacToe.{ME => _, _}
+  import ticTacToe._
 
   Describe("Reset Spec") {
     Holds("First turn is X") {

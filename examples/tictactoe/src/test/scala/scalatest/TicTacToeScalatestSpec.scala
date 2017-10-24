@@ -12,6 +12,6 @@ class BoardStateSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
 
   val ticTacToe: TicTacToe[Program] = BoardState.BoardTicTacToe
   val Tester = StateTester[Program, BoardState, PureTestError[TicTacToe.Error]].apply(BoardState.empty)
-  override val MPE = implicitly
+  val RE = RaiseError[Program, PureTestError[TicTacToe.Error]]
 
 }
