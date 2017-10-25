@@ -5,7 +5,7 @@ trait ScalatestFunSpec[P[_],E] extends org.scalatest.FunSpec
   with org.scalatest.Matchers
   with FunSpec[P,E] {
 
-  implicit val Tester: Tester[P,PureTestError[E]]
+  implicit val Tester: Tester[P,PuretestError[E]]
 
   def Describe(subject: String)(test: => Unit): Unit =
     describe(subject)(test)

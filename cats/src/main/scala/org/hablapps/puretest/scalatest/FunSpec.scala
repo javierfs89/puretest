@@ -3,9 +3,9 @@ package scalatestImpl
 
 trait ScalatestFunSpec[P[_], E] extends org.scalatest.FunSpec
   with org.scalatest.Matchers
-  with FunSpec[P, E] {
+  with FunSpec[P] {
 
-  implicit val Tester: Tester[P, PureTestError[E]]
+  implicit val Tester: Tester[P, PuretestError[E]]
 
   def Describe(subject: String)(test: => Unit): Unit = // scalastyle:ignore
     describe(subject)(test)

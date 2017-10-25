@@ -30,7 +30,7 @@ object ProgramMatchers{
       def beSatisfied = new Matcher[P[Boolean]]{
         def apply(program: P[Boolean]) =
           test(program).fold(
-            error => MatchResult(false, s"Unexpected error $error", "should not happen"),
+            error => MatchResult(false, s"$error", "should not happen"),
             b => MatchResult(b, "Boolean program returned false", "Boolean program returned true"))
       }
 

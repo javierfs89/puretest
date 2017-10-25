@@ -10,10 +10,10 @@ import WorkingProgram.Error, WorkingSpecStateT.Program
 class WorkingSpecStateT extends WorkingSpec.Scalatest[Program](
   WorkingProgram[Program],
   HandleError[Program,Error],
-  RaiseError[Program,PureTestError[Error]],
-  StateTester[Program,Int,PureTestError[Error]].apply(0)
+  RaiseError[Program,PuretestError[Error]],
+  StateTester[Program,Int,PuretestError[Error]].apply(0)
 )
 
 object WorkingSpecStateT{
-  type Program[T] = StateT[PureTestError[Error] \/ ?, Int, T]
+  type Program[T] = StateT[PuretestError[Error] \/ ?, Int, T]
 }

@@ -62,8 +62,8 @@ object WorkingSpec{
   class Scalatest[P[_]](
     val S: WorkingProgram[P],
     val HE: HandleError[P,Error],
-    val RE: RaiseError[P,PureTestError[Error]],
-    val Tester: Tester[P,PureTestError[Error]])
+    val RE: RaiseError[P,PuretestError[Error]],
+    val Tester: Tester[P,PuretestError[Error]])
   extends scalatestImpl.ScalatestFunSpec[P,Error]
   with WorkingSpec[P]
 }

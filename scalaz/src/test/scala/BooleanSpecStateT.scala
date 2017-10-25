@@ -11,9 +11,9 @@ class BooleanSpecStateT extends BooleanSpec.Scalatest[Program](
   implicitly,
   implicitly,
   implicitly,
-  StateTester[Program,Int,PureTestError[Throwable]].apply(0)
+  StateTester[Program,Int,PuretestError[Throwable]].apply(0)
 )
 
 object BooleanSpecStateT{
-  type Program[T] = StateT[PureTestError[Throwable] \/ ?, Int, T]
+  type Program[T] = StateT[PuretestError[Throwable] \/ ?, Int, T]
 }

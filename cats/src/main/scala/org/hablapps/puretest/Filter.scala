@@ -23,7 +23,9 @@ object Filter {
   }
 
   implicit def filterForMonadError[F[_], E](implicit
-      M: Monad[F], HE: HandleError[F,E], RE: RaiseError[F, PureTestError[E]]) =
+      M: Monad[F],
+      HE: HandleError[F, E],
+      RE: RaiseError[F, PuretestError[E]]) =
     new Filter[F] {
       def filter[A](fa: F[A])(f: A => Boolean)(implicit
         F: sourcecode.File, L: sourcecode.Line): F[A] =

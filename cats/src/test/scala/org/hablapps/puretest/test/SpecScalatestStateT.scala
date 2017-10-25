@@ -10,13 +10,13 @@ import SpecScalatestStateT.Program
 class SpecScalatestStateT extends scalatestImpl.ScalatestFunSpec[Program, Throwable] with Spec[Program] {
 
   val MS = MonadState[Program, Int]
-  implicit val MPE = MonadError[Program, PureTestError[Throwable]]
+  implicit val MPE = MonadError[Program, PuretestError[Throwable]]
   val ME = MonadError[Program, Throwable]
-  val RE = RaiseError[Program, PureTestError[Throwable]]
+  val RE = RaiseError[Program, PuretestError[Throwable]]
 
-  val Tester = StateTester[Program, Int, PureTestError[Throwable]].apply(0)
+  val Tester = StateTester[Program, Int, PuretestError[Throwable]].apply(0)
 }
 
 object SpecScalatestStateT {
-  type Program[T] = StateT[Either[PureTestError[Throwable], ?], Int, T]
+  type Program[T] = StateT[Either[PuretestError[Throwable], ?], Int, T]
 }

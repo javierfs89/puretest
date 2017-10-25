@@ -1,6 +1,6 @@
 package org.hablapps.puretest
 
-trait FunSpec[P[_], E] extends PureTestErrorImplicits {
+trait FunSpec[P[_]] extends PuretestErrorImplicits {
 
   // scalastyle:off
   def Describe(subject: String)(test: => Unit): Unit

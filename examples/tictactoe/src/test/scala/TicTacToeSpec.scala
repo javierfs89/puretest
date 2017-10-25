@@ -4,13 +4,13 @@ package test
 
 import cats.syntax.all._
 
-trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
+trait TicTacToeSpec[P[_]] extends FunSpec[P] {
   import TicTacToe._
 
   /* Evidence */
 
   val ticTacToe: TicTacToe[P]
-  implicit val RE: RaiseError[P, PureTestError[TicTacToe.Error]]
+  implicit val RE: RaiseError[P, PuretestError[TicTacToe.Error]]
 
   /* Predicates */
   import ticTacToe._
@@ -26,17 +26,17 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
     It("should not be possible to place more than one stone at the same place") {
       reset >>
       place(X, (1, 1)) >>
-      place(O, (1, 1)) shouldFailWith[Error] OccupiedPosition((1, 1))
+      place(O, (1, 1)) // shouldFailWith OccupiedPosition((1, 1))
     }
 
     It("Placing outside of the board is error") {
       reset >>
-      place(X, (5, 5)) shouldFailWith[Error] NotInTheBoard((5, 5))
+      place(X, (5, 5)) shouldFailWith NotInTheBoard((5, 5)) // OccupiedPosition((1, 1))
     }
 
     It("Placing in the wrong turn") {
       reset >>
-      place(O, (1, 1)) shouldFailWith[Error] WrongTurn(O)
+      place(O, (1, 1)) shouldFailWith WrongTurn(O)
     }
 
     Holds("Turn must change") {
@@ -48,9 +48,11 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
     }
 
     It("Position must be occupied") {
-      reset >>
-      place(X, (1, 1)) >>
-      in((1, 1)) shouldBe Option(X)
+      for {
+        _ <- reset
+        _ <- place(X, (1, 1))
+        Some(X) <- in((1, 1))
+      } yield ()
     }
   }
 
@@ -83,7 +85,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P, TicTacToe.Error] {
   Describe("Simulation behaviour") {
     It("Unfinished match") {
       reset >>
-      simulate((0, 0), (0, 1))((1, 0), (1, 1)) shouldFailWith[Error] NotEnoughMoves()
+      simulate((0, 0), (0, 1))((1, 0), (1, 1)) shouldFailWith NotEnoughMoves
     }
 
     Holds("Finished match") {

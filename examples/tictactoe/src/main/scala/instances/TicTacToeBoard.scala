@@ -16,7 +16,7 @@ object BoardState {
 
   /* Auxiliary types */
 
-  type Program[T] = StateT[Either[PureTestError[Error], ?], BoardState, T]
+  type Program[T] = StateT[Either[PuretestError[Error], ?], BoardState, T]
 
   /* Auxiliary values */
 
@@ -30,7 +30,7 @@ object BoardState {
 
     /* Evidences */
 
-    val ME: MonadError[Program, Error] = PureTestError.toMonadError
+    val ME: MonadError[Program, Error] = PuretestError.toMonadError
 
     import StateT._
 
@@ -120,7 +120,7 @@ object BoardState {
 
     private def checkGameInProgress: Program[Unit] =
       winner.map(_.isDefined)
-        .ifThen(ME.raiseError(GameOver()))
+        .ifThen(ME.raiseError(GameOver))
 
   }
 }

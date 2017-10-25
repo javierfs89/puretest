@@ -45,7 +45,7 @@ trait TicTacToe[P[_]] {
       opponent: List[Position]): P[Stone] =
     moves match {
       case Nil =>
-        ME.raiseError(NotEnoughMoves())
+        ME.raiseError(NotEnoughMoves)
       case m :: ms =>
         place(stone, m) >>
         win(stone).ifM(
@@ -71,11 +71,21 @@ object TicTacToe {
 
   // Errors
 
+  // scalastyle:off
+  def OccupiedPosition(position: Position): Error = Error.OccupiedPosition(position)
+  def NotInTheBoard(position: Position): Error = Error.NotInTheBoard(position)
+  def WrongTurn(turn: Stone): Error = Error.WrongTurn(turn)
+  val NotEnoughMoves: Error = Error.NotEnoughMoves
+  val GameOver: Error = Error.GameOver
+  // scalastyle:on
+
   sealed abstract class Error
-  case class OccupiedPosition(position: Position) extends Error
-  case class NotInTheBoard(position: Position) extends Error
-  case class WrongTurn(turn: Stone) extends Error
-  case class NotEnoughMoves() extends Error
-  case class GameOver() extends Error
+  object Error {
+    case class OccupiedPosition(position: Position) extends Error
+    case class NotInTheBoard(position: Position) extends Error
+    case class WrongTurn(turn: Stone) extends Error
+    case object NotEnoughMoves extends Error
+    case object GameOver extends Error
+  }
 
 }

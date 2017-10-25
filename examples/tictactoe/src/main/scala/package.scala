@@ -13,7 +13,7 @@ package object tictactoe {
     def ifThenOpt[A](p: P[A])(implicit M: Monad[P]): P[Option[A]] =
       self.ifM(p.map(Option.apply), Option.empty.pure[P])
 
-    def &&(other: P[Boolean])(implicit M: Apply[P]): P[Boolean] =
+    def &&(other: P[Boolean])(implicit M: Apply[P]): P[Boolean] = // scalastyle:ignore
       (self |@| other).map(_ && _)
   }
 

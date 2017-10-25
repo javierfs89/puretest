@@ -4,11 +4,11 @@ package test
 import cats.{MonadError, MonadState}
 import cats.syntax.all._
 
-trait Spec[P[_]] extends FunSpec[P, Throwable] {
+trait Spec[P[_]] extends FunSpec[P] {
 
   val MS: MonadState[P, Int]
   implicit val ME: MonadError[P, Throwable]
-  implicit val RE: RaiseError[P, PureTestError[Throwable]]
+  implicit val RE: RaiseError[P, PuretestError[Throwable]]
 
   /* Working programs */
 
