@@ -26,7 +26,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
     It("should not be possible to place more than one stone at the same place") {
       reset >>
       place(X, (1, 1)) >>
-      place(O, (1, 1)) // shouldFailWith OccupiedPosition((1, 1))
+      place(O, (1, 1)) shouldFailWith OccupiedPosition((1, 1))
     }
 
     It("Placing outside of the board is error") {
@@ -71,9 +71,9 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
       win(X)
     }
 
-    Holds("No simultaneous winners") {
+    It("No simultaneous winners") {
       winnerBoard >>
-      win(O) map (! _)
+      win(O) shouldBe false
     }
 
     Holds("No winner if not over") {
