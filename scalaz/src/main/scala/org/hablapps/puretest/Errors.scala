@@ -11,13 +11,11 @@ sealed abstract class PuretestError[E](msg: String){
 }
 
 object PuretestError extends PuretestErrorImplicits {
-
   def simplifyLocation(location: Location): String = {
     val fileext = raw".*/(.*)".r
     val fileext(filename) = location._1.value
     s"($filename:${location._2.value})"
   }
-
 }
 
 trait PuretestErrorImplicits {
