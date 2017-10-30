@@ -1,8 +1,8 @@
 package org.hablapps.puretest
 package test
 
-import scalaz.{MonadState, MonadError}
-import scalaz.syntax.monad._
+import cats.{MonadState, MonadError}
+import cats.syntax.all._
 
 trait BooleanPrograms[P[_]] {
 
@@ -11,15 +11,15 @@ trait BooleanPrograms[P[_]] {
   implicit val RE: RaiseError[P, PuretestError[Throwable]]
 
   def trueProgram: P[Boolean] = for {
-    _ <- MS.put(1)
+    _ <- MS.set(1)
     1 <- MS.get
   } yield true
 
   def falseProgram: P[Boolean] =
-    false.point[P]
+    false.pure[P]
 
   def failingMatchBoolProgram: P[Boolean] = for {
-    _ <- MS.put(1)
+    _ <- MS.set(1)
     2 <- MS.get
   } yield true
 

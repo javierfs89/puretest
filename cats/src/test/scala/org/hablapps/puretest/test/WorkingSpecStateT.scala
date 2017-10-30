@@ -2,9 +2,11 @@ package org.hablapps
 package puretest
 package test
 
-import scalaz._
+import cats.data.StateT
+import cats.instances.either._
 
 import WorkingProgram.Error, WorkingSpecStateT.Program
+import PuretestError._
 
 class WorkingSpecStateT extends WorkingSpec.Scalatest[Program](
   WorkingProgram[Program],
@@ -13,5 +15,5 @@ class WorkingSpecStateT extends WorkingSpec.Scalatest[Program](
 )
 
 object WorkingSpecStateT{
-  type Program[T] = StateT[PuretestError[Error] \/ ?, Int, T]
+  type Program[T] = StateT[Either[PuretestError[Error], ?], Int, T]
 }

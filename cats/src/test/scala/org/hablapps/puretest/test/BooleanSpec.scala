@@ -36,12 +36,12 @@ trait BooleanSpec[P[_]] extends BooleanPrograms[P] with FunSpec[P] {
 }
 
 object BooleanSpec{
-  import scalaz.{MonadState, MonadError}
+  import cats.{MonadState, MonadError}
 
   class Scalatest[P[_]](
-    val MS: MonadState[P,Int],
-    val ME: MonadError[P,Throwable],
-    val RE: RaiseError[P,PuretestError[Throwable]],
-    val Tester: Tester[P,PuretestError[Throwable]])
-  extends scalatestImpl.ScalatestFunSpec[P,Throwable] with BooleanSpec[P]
+    val MS: MonadState[P, Int],
+    val ME: MonadError[P, Throwable],
+    val RE: RaiseError[P, PuretestError[Throwable]],
+    val Tester: Tester[P, PuretestError[Throwable]])
+  extends scalatestImpl.ScalatestFunSpec[P, Throwable] with BooleanSpec[P]
 }

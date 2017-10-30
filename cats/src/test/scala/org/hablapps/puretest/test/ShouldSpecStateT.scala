@@ -1,10 +1,12 @@
-package org.hablapps
-package puretest
+package org.hablapps.puretest
 package test
 
-import scalaz._
+import cats.MonadError
+import cats.data.StateT
+import cats.instances.either._
 
 import WorkingProgram.Error, ShouldSpecStateT.Program
+import PuretestError._
 
 class ShouldSpecStateT extends ShouldSpec.Scalatest[Program](
   WorkingProgram[Program](implicitly,
@@ -16,5 +18,5 @@ class ShouldSpecStateT extends ShouldSpec.Scalatest[Program](
 )
 
 object ShouldSpecStateT{
-  type Program[T] = StateT[PuretestError[PuretestError[Error]] \/ ?, Int, T]
+  type Program[T] = StateT[Either[PuretestError[PuretestError[Error]], ?], Int, T]
 }
