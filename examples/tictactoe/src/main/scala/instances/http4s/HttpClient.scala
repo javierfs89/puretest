@@ -56,9 +56,7 @@ object HttpClient {
         response.status match {
           case Ok => response.as[Unit]
           case BadRequest =>
-            response.as[Error] flatMap { e =>
-              IO.raiseError(ErrorThrowable(e))
-            }
+            response.as[Error] flatMap ME.raiseError
           case _ =>
             IO.raiseError(new RuntimeException(response.toString))
         }
