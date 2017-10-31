@@ -3,7 +3,7 @@ package examples.tictactoe
 package test
 package pure
 
-import cats.MonadError
+import cats.{MonadError, ~>}
 import cats.data.StateT
 import cats.instances.either._
 
@@ -17,7 +17,14 @@ object BoardState {
 
   /* Auxiliary values */
 
+  type Inner[A] = examples.tictactoe.BoardState.Program[A]
   val Inner = examples.tictactoe.BoardState.Instance
+  val nat = new (Inner ~> Program) {
+    def apply[A](ia: Inner[A]): Program[A] =
+      StateT[Either[PuretestError[Error], ?], BoardState, A] { board =>
+        ia.run(board).left.map(ApplicationError(_))
+      }
+  }
 
   /* Instance */
 
@@ -27,12 +34,12 @@ object BoardState {
     val ME: MonadError[Program, Error] = PuretestError.toMonadError
 
     /* Transformers */
-    def reset: Program[Unit] = Inner.reset.liftTo[Program]
-    def place(stone: Stone, position: Position): Program[Unit] = Inner.place(stone, position).liftTo[Program]
+    def reset: Program[Unit] = nat(Inner.reset)
+    def place(stone: Stone, position: Position): Program[Unit] = nat(Inner.place(stone, position))
 
     /* Observers */
-    def in(position: Position): Program[Option[Stone]] = Inner.in(position).liftTo[Program]
-    def turn: Program[Option[Stone]] = Inner.turn.liftTo[Program]
-    def win(stone: Stone): Program[Boolean] = Inner.win(stone).liftTo[Program]
+    def in(position: Position): Program[Option[Stone]] = nat(Inner.in(position))
+    def turn: Program[Option[Stone]] = nat(Inner.turn)
+    def win(stone: Stone): Program[Boolean] = nat(Inner.win(stone))
   }
 }
