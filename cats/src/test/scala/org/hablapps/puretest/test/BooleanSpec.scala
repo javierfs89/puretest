@@ -39,9 +39,9 @@ object BooleanSpec{
   import cats.{MonadState, MonadError}
 
   class Scalatest[P[_]](
+    val Tester: Tester[P, PuretestError[Throwable]])(implicit
     val MS: MonadState[P, Int],
     val ME: MonadError[P, Throwable],
-    val RE: RaiseError[P, PuretestError[Throwable]],
-    val Tester: Tester[P, PuretestError[Throwable]])
+    val RE: RaiseError[P, PuretestError[Throwable]])
   extends scalatestImpl.ScalatestFunSpec[P, Throwable] with BooleanSpec[P]
 }
