@@ -60,5 +60,5 @@ case class NotMatched[A,E](found: A)(implicit location: Location)
 case class NotMatchedFailure[E](found: E)(implicit location: Location)
   extends PuretestError[E](s"Expected pattern doesn't match found error $found ${simplifyLocation(location)}")
 
-case class ShouldNotHappen[E](implicit location: Location)
+case class ShouldNotHappen[E]()(implicit location: Location)
   extends PuretestError[E](s"This error shouldn't ever be thrown ${simplifyLocation(location)}")
