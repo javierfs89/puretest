@@ -43,5 +43,5 @@ object BooleanSpec{
     val MS: MonadState[P, Int],
     val ME: MonadError[P, Throwable],
     val RE: RaiseError[P, PuretestError[Throwable]])
-  extends scalatestImpl.ScalatestFunSpec[P, Throwable] with BooleanSpec[P]
+  extends scalatestImpl.FunSpec[P, Throwable] with BooleanSpec[P]
 }
