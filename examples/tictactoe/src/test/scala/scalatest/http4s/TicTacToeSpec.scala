@@ -3,13 +3,13 @@ package examples.tictactoe
 package test
 package http4s
 
-import scalatestImpl.ScalatestFunSpec
+import scalatestImpl.FunSpec
 import cats.effect.IO
 
 import HttpClient.Program
 import Payloads._
 
-class TicTacToeSpec extends ScalatestFunSpec[Program, TicTacToe.Error]
+class TicTacToeSpec extends FunSpec[Program, TicTacToe.Error]
     with test.TicTacToeSpec[Program] {
 
   val ticTacToe = HttpClient.Instance
