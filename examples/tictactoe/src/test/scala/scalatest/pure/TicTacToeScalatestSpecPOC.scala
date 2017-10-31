@@ -3,13 +3,13 @@ package examples.tictactoe
 package test
 package pure
 
-import scalatestImpl.ScalatestFunSpec
+import scalatestImpl.FunSpec
 import cats.instances.either._
 
 import BoardStatePOC.Program
 import examples.tictactoe.BoardState.{empty => emptyBoard}
 
-class TicTacToeSpecPOC extends ScalatestFunSpec[Program, TicTacToe.Error]
+class TicTacToeSpecPOC extends FunSpec[Program, TicTacToe.Error]
     with test.TicTacToeSpec[Program] {
 
   val ticTacToe = BoardStatePOC.Instance
