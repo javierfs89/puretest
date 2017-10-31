@@ -6,9 +6,6 @@ import scalaz._
 import BooleanSpecStateT.Program
 
 class BooleanSpecStateT extends BooleanSpec.Scalatest[Program](
-  MonadState[Program, Int],
-  MonadError[Program, Throwable],
-  RaiseError[Program, PuretestError[Throwable]],
   StateTester[Program,Int,PuretestError[Throwable]].apply(0))
 
 object BooleanSpecStateT {
