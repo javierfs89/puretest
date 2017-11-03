@@ -67,11 +67,12 @@ lazy val tictactoe = (project in file("examples/tictactoe"))
     commonSettings,
     name := "tictactoe-example",
     publish := { },
-    publishLocal := { },
-    libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-dsl" % "0.18.0-SNAPSHOT",
-      "org.http4s" %% "http4s-blaze-server" % "0.18.0-SNAPSHOT",
-      "org.http4s" %% "http4s-blaze-client" % "0.18.0-SNAPSHOT",
-      "org.http4s" %% "http4s-circe" % "0.18.0-SNAPSHOT",
-      "io.circe" %% "circe-generic" % "0.9.0-M1",
-      "io.circe" %% "circe-literal" % "0.9.0-M1"))
+    publishLocal := { }
+    // libraryDependencies ++= Seq(
+    //   "org.http4s" %% "http4s-dsl" % "0.18.0-M5",
+    //   "org.http4s" %% "http4s-blaze-server" % "0.18.0-M5",
+    //   "org.http4s" %% "http4s-blaze-client" % "0.18.0-M5",
+    //   "org.http4s" %% "http4s-circe" % "0.18.0-M5",
+    //   "io.circe" %% "circe-generic" % "0.9.0-M1",
+    //   "io.circe" %% "circe-literal" % "0.9.0-M1")
+    )

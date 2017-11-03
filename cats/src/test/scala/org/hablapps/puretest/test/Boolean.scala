@@ -4,25 +4,26 @@ package test
 import cats.{MonadState, MonadError}
 import cats.syntax.all._
 
-trait BooleanPrograms[P[_]] {
+trait BooleanPrograms[P[_]] { self: FunSpec[P, Throwable] =>
 
-  val MS: MonadState[P, Int]
-  implicit val ME: MonadError[P, Throwable]
-  implicit val RE: RaiseError[P, PuretestError[Throwable]]
+  implicit val MS: MonadState[TP, Int]
+  val ME: MonadError[TP, Throwable]
 
-  def trueProgram: P[Boolean] = for {
-    _ <- MS.set(1)
-    1 <- MS.get
-  } yield true
+  def trueProgram: TP[Boolean] =
+    for {
+      _ <- MS.set(1)
+      1 <- MS.get
+    } yield true
 
-  def falseProgram: P[Boolean] =
-    false.pure[P]
+  def falseProgram: TP[Boolean] =
+    false.pure[TP]
 
-  def failingMatchBoolProgram: P[Boolean] = for {
-    _ <- MS.set(1)
-    2 <- MS.get
-  } yield true
+  def failingMatchBoolProgram: TP[Boolean] =
+    for {
+      _ <- MS.set(1)
+      2 <- MS.get
+    } yield false
 
-  def raisedErrorBoolProgram: P[Boolean] =
+  def raisedErrorBoolProgram: TP[Boolean] =
     ME.raiseError(new RuntimeException("forced exception"))
 }

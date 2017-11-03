@@ -3,7 +3,7 @@ package org.hablapps
 package object puretest
   extends StateValidatedMonad
   with MonadErrorUtils
-  with Filter.Syntax {
+  with TestProgramModule {
 
   type Location = (sourcecode.File, sourcecode.Line)
 
@@ -11,11 +11,11 @@ package object puretest
 
   /* matchers and ops */
 
-  import cats.Monad
+  import cats.MonadError
 
-  implicit def toPureMatchers[P[_], A](self: P[A])(implicit
-    M: Monad[P],
-    loc: Location) = new PureMatchers(self)
+  // implicit def toPureMatchers[P[_], E, A](self: TestProgram[P, E, A])(implicit
+  //   M: MonadError[TestProgram[P, E, ?], E],
+  //   loc: Location) = new PureMatchers2(self)
 
   implicit def toBooleanOps[P[_]](p: P[Boolean]) =
     new BooleanOps(p)

@@ -1,7 +1,7 @@
 package org.hablapps.puretest
 package test
 
-trait BooleanSpec[P[_]] extends BooleanPrograms[P] with FunSpec[P] {
+trait BooleanSpec[P[_]] extends BooleanPrograms[P] with FunSpec[P, Throwable] {
 
   Describe("Boolean programs"){
     Holds("if return true"){
@@ -35,13 +35,17 @@ trait BooleanSpec[P[_]] extends BooleanPrograms[P] with FunSpec[P] {
   }
 }
 
-object BooleanSpec{
+object BooleanSpec {
   import cats.{MonadState, MonadError}
 
   class Scalatest[P[_]](
-    val Tester: Tester[P, PuretestError[Throwable]])(implicit
-    val MS: MonadState[P, Int],
-    val ME: MonadError[P, Throwable],
-    val RE: RaiseError[P, PuretestError[Throwable]])
-  extends scalatestImpl.FunSpec[P, Throwable] with BooleanSpec[P]
+    val T: Tester[P, Throwable])(implicit
+    ME2: MonadError[P, Throwable],
+    MS2: MonadState[P, Int],
+    val PM: PureMatchersTC[TestProgram[P, Throwable, ?], Throwable])
+      extends scalatestImpl.FunSpec[P, Throwable]
+      with BooleanSpec[P] {
+    val ME = MonadError[TP, Throwable]
+    val MS = MonadState[TP, Int]
+  }
 }

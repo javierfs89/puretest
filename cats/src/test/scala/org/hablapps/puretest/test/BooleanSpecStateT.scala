@@ -9,8 +9,8 @@ import BooleanSpecStateT.Program
 import PuretestError._
 
 class BooleanSpecStateT extends BooleanSpec.Scalatest[Program](
-  StateTester[Program, Int, PuretestError[Throwable]].apply(0))
+  StateTester[Program, Int, Throwable].apply(0))
 
 object BooleanSpecStateT {
-  type Program[T] = StateT[Either[PuretestError[Throwable], ?], Int, T]
+  type Program[T] = StateT[Either[Throwable, ?], Int, T]
 }

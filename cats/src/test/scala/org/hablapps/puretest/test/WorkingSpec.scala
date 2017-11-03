@@ -5,11 +5,9 @@ import cats.syntax.all._
 
 import WorkingProgram.Error
 
-trait WorkingSpec[P[_]] extends FunSpec[P] {
-  val S: WorkingProgram[P]
+trait WorkingSpec[P[_]] extends FunSpec[P, Error] {
+  val S: WorkingProgram[TP]
   import S._
-
-  implicit val RE: RaiseError[P,PuretestError[Error]]
 
   Describe("ShouldSucceed"){
 
@@ -53,17 +51,27 @@ trait WorkingSpec[P[_]] extends FunSpec[P] {
     }
 
     It("should work if error pattern is matched"){
-      failingProgram shouldMatchFailure[Error](_ == Error(0))
+      failingProgram shouldMatchFailure[Error] (_ == Error(0))
     }
   }
 
 }
 
-object WorkingSpec{
+object WorkingSpec {
+  import cats.{MonadError, MonadState}
+
   class Scalatest[P[_]](
-    val S: WorkingProgram[P],
-    val RE: RaiseError[P, PuretestError[Error]],
-    val Tester: Tester[P, PuretestError[Error]])
+    S2: WorkingProgram[P],
+    val T: Tester[P, Error])(implicit
+    ME2: MonadError[P, Error],
+    MS2: MonadState[P, Int],
+    val PM: PureMatchersTC[TestProgram[P, Error, ?], Error])
   extends scalatestImpl.FunSpec[P, Error]
-  with WorkingSpec[P]
+  with WorkingSpec[P] {
+    val S = new WorkingProgram[TP] {
+      val ME = MonadError[TP, Error]
+      val MS = MonadState[TP, Int]
+    }
+  }
+
 }

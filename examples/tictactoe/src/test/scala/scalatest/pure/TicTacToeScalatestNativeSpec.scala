@@ -6,7 +6,6 @@ import org.scalatest._
 import cats.instances.either._
 import cats.syntax.all._
 
-import org.hablapps.puretest.ApplicationError
 import org.hablapps.puretest.examples.tictactoe.BoardState.{empty => emptyBoard}
 
 class TicTacToeSpecNative extends FunSpec with Matchers {
@@ -24,17 +23,17 @@ class TicTacToeSpecNative extends FunSpec with Matchers {
     it("should not be possible to place more than one stone at the same place") {
       (reset >>
       place(X, (1, 1)) >>
-      place(O, (1, 1))).runA(emptyBoard) shouldBe Left(ApplicationError(OccupiedPosition((1, 1))))
+      place(O, (1, 1))).runA(emptyBoard) shouldBe Left(OccupiedPosition((1, 1)))
     }
 
     it("Placing outside of the board is error") {
       (reset >>
-      place(X, (5, 5))).runA(emptyBoard) shouldBe Left(ApplicationError(NotInTheBoard((5, 5))))
+      place(X, (5, 5))).runA(emptyBoard) shouldBe Left(NotInTheBoard((5, 5)))
     }
 
     it("Placing in the wrong turn") {
       (reset >>
-      place(O, (1, 1))).runA(emptyBoard) shouldBe Left(ApplicationError(WrongTurn(O)))
+      place(O, (1, 1))).runA(emptyBoard) shouldBe Left(WrongTurn(O))
     }
 
     it("Turn must change") {
@@ -83,7 +82,7 @@ class TicTacToeSpecNative extends FunSpec with Matchers {
   describe("Simulation behaviour") {
     it("Unfinished match") {
       (reset >>
-      simulate((0, 0), (0, 1))((1, 0), (1, 1))).runA(emptyBoard) shouldBe Left(ApplicationError(NotEnoughMoves))
+      simulate((0, 0), (0, 1))((1, 0), (1, 1))).runA(emptyBoard) shouldBe Left(NotEnoughMoves)
     }
 
     it("Finished match") {

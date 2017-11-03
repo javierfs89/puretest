@@ -3,14 +3,13 @@ package examples.tictactoe
 package test
 
 import cats.syntax.all._
+import TicTacToe._
 
-trait TicTacToeSpec[P[_]] extends FunSpec[P] {
-  import TicTacToe._
+trait TicTacToeSpec[P[_]] extends FunSpec[P, Error] {
 
   /* Evidence */
 
-  val ticTacToe: TicTacToe[P]
-  implicit val RE: RaiseError[P, PuretestError[TicTacToe.Error]]
+  val ticTacToe: TicTacToe[TP]
 
   /* Predicates */
   import ticTacToe._
@@ -58,7 +57,7 @@ trait TicTacToeSpec[P[_]] extends FunSpec[P] {
 
   Describe("Win laws") {
 
-    def winnerBoard: P[Unit] =
+    def winnerBoard: TP[Unit] =
       reset >>
       place(X, (0, 0)) >>
       place(O, (1, 0)) >>

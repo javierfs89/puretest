@@ -10,10 +10,8 @@ import PuretestError._
 
 class WorkingSpecStateT extends WorkingSpec.Scalatest[Program](
   WorkingProgram[Program],
-  RaiseError[Program, PuretestError[Error]],
-  StateTester[Program, Int, PuretestError[Error]].apply(0)
-)
+  StateTester[Program, Int, Error].apply(0))
 
 object WorkingSpecStateT{
-  type Program[T] = StateT[Either[PuretestError[Error], ?], Int, T]
+  type Program[T] = StateT[Either[Error, ?], Int, T]
 }
